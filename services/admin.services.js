@@ -11,7 +11,8 @@ class adminService {
                         cpf: process.env.ADM_CREDENTIALS_CPF,
                         username: process.env.ADM_CREDENTIALS_USERNAME,
                         password: await service.getHashed(process.env.ADM_CREDENTIALS_PASSWORD),
-                        role: "Admin",
+                        role: "Manager",
+                        admin: true
                     };
                     User.create(admin)
                         .then(() => {

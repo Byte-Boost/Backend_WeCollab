@@ -3,7 +3,7 @@ module.exports = (req, res, next) => {
   try {
     let token = req.headers['authorization'].split(' ')[1];
     let user = jwt.verify(token, process.env.JWT_SECRET);
-  if (user.role != "Admin"){
+  if (!user.admin){
       return res.status(403).json({message: 'Unauthorized'});
     } 
     next();

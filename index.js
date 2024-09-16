@@ -29,6 +29,7 @@ app.use('/accounts', require('./routes/account.routes'));
 
 app.use(authMiddleware);
 app.use('/users', require('./routes/user.routes'));
+app.use('/tickets', require('./routes/ticket.routes'));
 
 db.sequelize.sync().then(()=>{
   // Create an admin user if it doesn't exist

@@ -13,9 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     cpf: {
       type: DataTypes.STRING,
-      // allowNull: false,
-      // unique: true,
-      allowNull: true,
+      unique: true,
+      allowNull: false,
       validate: {
         len: [11, 11],
         is: {
@@ -41,15 +40,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validator: {
-        isIn: ["User", "Manager", "Admin"]
+        isIn: ["User", "Manager"]
       },
       defaultValue: "User"
     },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   });
-  // User.associate = function(models) {
-  //   User.hasMany(models.OtherEntityHere, {
-  //     foreignKey: 'userCPF',
-  //   })
-  // };
+  User.associate = function(models) {
+    User.hasMany(models.Ticket, {
+      foreignKey: 'requesterId',
+    })
+  };
   return User;
 };
