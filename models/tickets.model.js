@@ -46,6 +46,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'requesterId',
         onDelete: 'CASCADE'
       })
+      Ticket.hasMany(models.Comment, {
+        foreignKey: 'ticketId',
+      })
     };
     return Ticket;
   };

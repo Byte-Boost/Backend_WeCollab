@@ -54,6 +54,9 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Ticket, {
       foreignKey: 'requesterId',
     })
+    User.hasMany(models.Comment, {
+      foreignKey: 'commenterId',
+    })
   };
   return User;
 };
