@@ -4,6 +4,7 @@ const router = require('express').Router();
 // Tickets itself
 router.post('/', controller.createTicket);
 router.get('/', controller.getTickets);
+router.get('/:id', controller.getTicketById);
 router.put('/:id', controller.updateTicket);
 router.delete('/:id', controller.deleteTicket);
 // Comments on Comment table

@@ -32,6 +32,19 @@ class requestHandler {
         res.status(400).send();
       });
   };
+  getTicketById = (req, res) => {
+    let { params } = req;
+    
+    // Query & response
+    Ticket.findByPk(params.id)
+      .then((ticket) => {
+        res.status(200).send(ticket);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send();
+      });
+  };
   getComment = (req, res) => {
     let { query } = req;
     // Filter options
@@ -92,12 +105,12 @@ class requestHandler {
       });
   };
   createComment = async (req, res) => {
-    let { body } = req;
+    let { body, params } = req;
 
     // Create Ticket Comment object
     var comment = {
       content: body.content || null,
-      ticketId: body.ticketId,
+      ticketId: params.id,
       commenterId: body.commenterId,
       date: Date.now()
     };
