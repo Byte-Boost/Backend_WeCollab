@@ -5,6 +5,7 @@ const db = require('./models');
 const cors = require('cors');
 const authMiddleware = require('./middleware/auth.middleware');
 const admin = require('./services/admin.services');
+const dummyData = require('./services/dummyData.services');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -33,6 +34,7 @@ app.use('/tickets', require('./routes/ticket.routes'));
 
 db.sequelize.sync().then(()=>{
   // Create an admin user if it doesn't exist
-  admin.generateAdmin()
+  if (process.env.DEVELOPMENT_TESTS) dummyData.generateDummyData();
+  else admin.generateAdmin();
   app.listen(PORT, ()=>console.log(`Server running on https://localhost:${PORT}`));
 });
