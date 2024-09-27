@@ -88,8 +88,8 @@ class dummyDataService {
         };
         let ticket2 = {
             area: "Area de teste",
-            status: "Novo",
-            category: "Em andamento",
+            status: "Em andamento",
+            category: "Agendamento",
             title: "Reuniões entre os dias 06 e 09",
             description: "Pedido para agendar reuniões com [xxxx] entre os dias 06/10 e 09/10",
             requesterId: 4,
@@ -116,37 +116,37 @@ class dummyDataService {
             content: "Pedido sendo considerado.",
             ticketId: 1,
             commenterId: 1,
-            date: Date("2024-06-11")
+            date: new Date("2024-06-11")
         };
         let comment2 = {
             content: "Pedido aprovado.",
             ticketId: 1,
             commenterId: 1,
-            date: Date("2024-06-12")
+            date: new Date("2024-06-12")
         };
         let comment3 = {
             content: "Pedido concedido, Ticket realizado.",
             ticketId: 1,
             commenterId: 1,
-            date: Date("2024-06-12")
+            date: new Date("2024-06-12")
         };
         let comment4 = {
             content: "Não será possível agendar reuniões no dia 06/10",
             ticketId: 2,
             commenterId: 1,
-            date: Date("2024-09-25")
+            date: new Date("2024-09-25")
         };
         let comment5 = {
             content: "Será possível para os dias 07-10 de outubro, nesse caso?",
             ticketId: 2,
             commenterId: 4,
-            date: Date("2024-09-25")
+            date: new Date("2024-09-26")
         };
         let comment6 = {
             content: "Sim, estes dias estão disponíveis. gostária de agendá-los?",
             ticketId: 2,
             commenterId: 1,
-            date: Date("2024-09-25")
+            date: new Date("2024-09-26")
         };
         Comment.bulkCreate([comment1, comment2, comment3, comment4, comment5, comment6])
         .then(() => {

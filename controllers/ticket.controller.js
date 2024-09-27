@@ -46,7 +46,7 @@ class requestHandler {
       });
   };
   getComment = (req, res) => {
-    let { query } = req;
+    let { query, params } = req;
     // Filter options
     let sortMethod = query.sortBy || "DATE";
     let page = query.page ? parseInt(query.page) : 1;
@@ -61,6 +61,11 @@ class requestHandler {
 
     // Query options
     let findOpt = {
+      where: {ticketId: params.id},
+      include: {
+        model: User,
+        attributes: { exclude: ["password", "username"] },
+      },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
       limit: limit
