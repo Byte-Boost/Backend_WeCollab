@@ -1,8 +1,9 @@
 <h1 align="center">🎩WeCollab - Backend</h1>
    <p align="center">
-   <image alt="header-WeCollab-main" src="https://i.imgur.com/RXakrvx.png"/>   
+   <image alt="header-WeCollab-back" src="https://github.com/user-attachments/assets/eeb08ee3-f918-445e-a659-78c1088d46c9"/>   
    </p>
 <hr>   
+
 
 
 <h2 style="display: inline">Example <sub>(Endpoint)</sub></h2>
