@@ -1,9 +1,12 @@
 const { Ticket, Comment, User } = require("../models");
+const { Op } = require("sequelize");
 class requestHandler {
   // GET
-  getTickets = (req, res) => {
-    let { query } = req;
+  getTickets = async (req, res) => {
+    let { query, user } = req;
+    let currentUser = await User.findOne({ where: { id: user.id } });
     // Filter options
+    let filter = query.filter || null;
     let sortMethod = query.sortBy || "DATEOFCREATION";
     let page = query.page ? parseInt(query.page) : 1;
     let limit = query.limit ? parseInt(query.limit) : null;
@@ -17,6 +20,10 @@ class requestHandler {
 
     // Query options
     let findOpt = {
+      where: {
+        area: filter == "area" ? currentUser.area : {[Op.ne]: null},
+        requesterId: (filter == null && currentUser.admin) || filter == "area" ? {[Op.ne]: null} : currentUser.id
+      },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
       limit: limit
@@ -32,7 +39,7 @@ class requestHandler {
         res.status(400).send();
       });
   };
-  getTicketById = (req, res) => {
+  getTicketById = async (req, res) => {
     let { params } = req;
     
     // Query & response
@@ -45,7 +52,7 @@ class requestHandler {
         res.status(400).send();
       });
   };
-  getComment = (req, res) => {
+  getComment = async (req, res) => {
     let { query, params } = req;
     // Filter options
     let sortMethod = query.sortBy || "DATE";
@@ -123,6 +130,11 @@ class requestHandler {
     // Create comment
     Comment.create(comment)
       .then(() => {
+        Ticket.findByPk(params.id).then((ticket) => {
+          ticket.update({
+            status: "Em andamento",
+          });
+        });
         res.status(201).send();
       })
       .catch((err) => {
@@ -130,6 +142,24 @@ class requestHandler {
         res.status(400).send();
       });
   };
+  closeTicket = async (req, res)=>{
+    let { params } = req;
+
+    await Ticket.update(
+      {status: "Concluído"},
+      {
+        where: {
+          id: params.id
+        }
+      }).then((response) => {
+        res.status(204).send();
+      }).catch((err) => {
+        console.log(err);
+        res.status(400).send();
+      }
+    );
+
+  }
   // PUT
   updateTicket = async (req, res) => {
     let { body, params } = req;

@@ -16,6 +16,7 @@ class dummyDataService {
             name: "Jaqueline Veloso",
             cpf: "11111111111",
             username: "jaquemfvs",
+            area: "Recursos Humanos",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
@@ -24,6 +25,7 @@ class dummyDataService {
             name: "João Eduardo",
             cpf: "22222222222",
             username: "joao-eduardo17",
+            area: "Suporte",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
@@ -31,7 +33,8 @@ class dummyDataService {
         let user3 = {
             name: "Marcos Antônio",
             cpf: "33333333333",
-            username: "OOoutroMarcos",
+            username: "OOutroMarcos",
+            area: "Suporte",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
@@ -40,6 +43,7 @@ class dummyDataService {
             name: "Markos Vinicius Nunes",
             cpf: "44444444444",
             username: "MarkVN2",
+            area: "Suporte",
             password: await service.getHashed("123"),
             role: "Manager",
             admin: false
@@ -48,6 +52,7 @@ class dummyDataService {
             name: "Sandro-Pimentel",
             cpf: "55555555555",
             username: "Sandro-Pimentel",
+            area: "Desenvolvimento",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
@@ -56,6 +61,7 @@ class dummyDataService {
             name: "Vinicius Felipe Forcato",
             cpf: "66666666666",
             username: "nininhosam",
+            area: "Desenvolvimento",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
@@ -64,6 +70,7 @@ class dummyDataService {
             name: "Vitor Saborito",
             cpf: "77777777777",
             username: "VituuSaborito",
+            area: "Desenvolvimento",
             password: await service.getHashed("123"),
             role: "User",
             admin: false
