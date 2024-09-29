@@ -14,7 +14,7 @@ class accountService {
     }
 
     getToken = async (user) => {
-        const token = jwt.sign({ "id" : user.id, "username" : user.username, "role": user.role, "admin": user.admin}, process.env.JWT_SECRET);
+        const token = jwt.sign({ "id" : user.id, "username" : user.username, "role": user.role, "area": user.area, "admin": user.admin}, process.env.JWT_SECRET);
         return token;
     }
 
