@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 8080;
 const db = require('./models');
 const cors = require('cors');
 const authMiddleware = require('./middleware/auth.middleware');
-const admin = require('./services/admin.services');
+const startup = require('./services/startup.services');
 const dummyData = require('./services/dummyData.services');
 
 const swaggerUi = require('swagger-ui-express');
@@ -32,9 +32,10 @@ app.use(authMiddleware);
 app.use('/users', require('./routes/user.routes'));
 app.use('/tickets', require('./routes/ticket.routes'));
 
-db.sequelize.sync().then(()=>{
+db.sequelize.sync().then(async ()=>{
+  await startup.setupAreas()
   // Create an admin user if it doesn't exist
   if (process.env.DEVELOPMENT_TESTS) dummyData.generateDummyData();
-  else admin.generateAdmin();
+  else startup.generateAdmin();
   app.listen(PORT, ()=>console.log(`Server running on https://localhost:${PORT}`));
 });

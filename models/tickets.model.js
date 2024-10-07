@@ -19,10 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         defaultValue: "Novo"
       },
-      category: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -44,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     Ticket.associate = function(models) {
       Ticket.belongsTo(models.User, {
         foreignKey: 'requesterId',
+        onDelete: 'CASCADE'
+      })
+      Ticket.belongsTo(models.Area, {
+        foreignKey: 'area',
         onDelete: 'CASCADE'
       })
       Ticket.hasMany(models.Comment, {

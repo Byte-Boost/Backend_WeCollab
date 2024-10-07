@@ -39,10 +39,6 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      validator: {
-        isIn: ["User", "Manager"]
-      },
-      defaultValue: "User"
     },
     admin: {
       type: DataTypes.BOOLEAN,
@@ -51,6 +47,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   User.associate = function(models) {
+    User.belongsTo(models.Area, {
+      foreignKey: 'area',
+      onDelete: 'CASCADE'
+    })
+    User.belongsTo(models.Role, {
+      foreignKey: 'role',
+      onDelete: 'CASCADE'
+    })
     User.hasMany(models.Ticket, {
       foreignKey: 'requesterId',
     })
