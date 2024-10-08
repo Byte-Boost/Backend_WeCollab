@@ -30,6 +30,7 @@ class requestHandler {
         name: startsWith ? {[Op.regexp]: `^${startsWith}`} : {[Op.ne]: null},
         admin: (adminOnly && adminOnly.toUpperCase() == "TRUE")? true : {[Op.ne]: null},
       },
+      include: [{ model: Role, attributes: ["name"] }],
       attributes: { exclude: ["password", "username"] },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
@@ -48,7 +49,7 @@ class requestHandler {
   };
   getUsersByCPF = (req, res) => {
     let { params } = req;
-    User.findAll({ where: { cpf: params.cpf }, attributes: { exclude: ["password", "username"]} })
+    User.findAll({ where: { cpf: params.cpf }, include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password", "username"]} })
       .then((users) => {
         res.status(200).send(users);
       })
@@ -59,7 +60,7 @@ class requestHandler {
   };
   getUsersById = (req, res) => {  
     let { params } = req;
-    User.findByPk(params.id, {attributes: { exclude: ["password", "username"]}}).then((user) => {
+    User.findByPk(params.id, {include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password", "username"]}}).then((user) => {
             res.status(200).send(user);
           })
           .catch((err) => {
@@ -128,21 +129,36 @@ class requestHandler {
   // PUT
   updateUser = async (req, res) => {
     let { body, params } = req;
-    User.update({
-      name: body.name,
-      area: body.area,
-      role: body.role,
-      admin: body.admin,
-      }, {
-      where: {
-        id: params.id
-      },
-    }).catch((err) => {
-      console.log(err);
-      res.status(400).send();
-    });
+    
+    let role = body.role
+    if (body.role != null) {
+      await Role.findOne({ where: { name: body.role } })
+      .then((r) => {
+        role = r ? r.id : null})
+    }
 
-    res.status(200).send();
+    if (role !== null){
+      User.update({
+        name: body.name,
+        area: body.area,
+        roleId: role,
+        admin: body.admin,
+        }, {
+        where: {
+          id: params.id
+        },
+      }).then(()=>{
+        res.status(200).send()
+      }).catch((err) => {
+        console.log(err);
+        res.status(400).send({error: "Invalid request"});
+      });
+
+
+    } else {
+      res.status(400).send({error: "Role not found"});
+    }
+
   }
   // DELETE
   deleteUser = (req, res) => {

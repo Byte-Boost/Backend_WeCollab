@@ -4,7 +4,7 @@ const router = require('express').Router();
 
 router.post('/register', adminMiddleware, controller.registerUser);
 router.post('/login', controller.loginUser);
-router.put('/:id', adminMiddleware, controller.updateUser);
+router.patch('/:id', adminMiddleware, controller.updateUser);
 router.delete('/:id', adminMiddleware, controller.deleteUser);
 module.exports = router;
 /**
