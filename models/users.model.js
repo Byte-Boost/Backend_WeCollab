@@ -36,9 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    roleId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     admin: {
       type: DataTypes.BOOLEAN,
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     })
     User.belongsTo(models.Role, {
-      foreignKey: 'role',
+      foreignKey: 'roleId',
       onDelete: 'CASCADE'
     })
     User.hasMany(models.Ticket, {

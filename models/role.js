@@ -1,15 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
   const Role = sequelize.define("Role", {
-    name: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
       unique: true,
       primaryKey: true,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     areaName: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
     }
   }); 
   Role.associate = function(models) {
@@ -18,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     })
     Role.hasMany(models.User, {
-      foreignKey: 'role',
+      foreignKey: 'roleId',
     })
   };
   return Role;

@@ -1,5 +1,5 @@
 const db = require("../models")
-const { User } = require("../models");
+const { User, Role } = require("../models");
 const { Op } = require("sequelize");
 const service = require("../services/account.services.js");
 
@@ -77,27 +77,37 @@ class requestHandler {
 
     // Assert CPF is in the correct format
     body.cpf = String(body.cpf).replace(/[\D]+/g, "");
-    
-    // Create user object
-    var user = {
-      name: body.name,
-      cpf: body.cpf,
-      area: body.area || null,
-      username: body.username,
-      password: await service.getHashed(body.password),
-      role: (body.role == "Manager") ? body.role : "User",
-      admin: body.admin || false
-    };
 
-    // Create user
-    User.create(user)
-      .then(() => {
-        res.status(201).send();
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).send();
+    let role = {id: null}
+    if (body.role != null) {
+      await Role.findOne({ where: { name: body.role } })
+      .then((r) => {role = r})
+    }
+
+    if (role){
+      // Create user object
+      var user = {
+        name: body.name,
+        cpf: body.cpf,
+        area: body.area,
+        username: body.username,
+        password: await service.getHashed(body.password),
+        roleId: role.id ? role.id : null,
+        admin: body.admin || false
+      };
+  
+      // Create user
+      User.create(user)
+        .then(() => {
+          res.status(201).send();
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400).send();
       });
+    } else {
+      res.status(400).send({error: "Role not found"});
+    }
   };
 
   loginUser = async (req, res) => {
