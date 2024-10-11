@@ -92,29 +92,44 @@ class requestHandler {
   createTicket = async (req, res) => {
     let { body } = req;
 
-    // Create Ticket object
-    var ticket = {
-      area: body.area || null,
-      status: "Novo",
-      category: body.category,
-      title: body.title,
-      description: body.description || null,
-      requesterId: body.requesterId,
-      dateOfCreation: body.dateOfCreation || Date.now()
-    };
+    let observers = body.observers;
+    if (observers && observers.length > 0) {
+      // user has passed a non-empty array of observers
+      User.findAll({ where: { id: observers } })
+      .then((users) => {
+        if(users.length > 0){
+          // Check if at least one observer exists, and only then:
+          // Create Ticket object
+          var ticket = {
+            area: body.area || null,
+            title: body.title,
+            description: body.description || null,
+            requesterId: body.requesterId,
+            status: "Novo",
+            dateOfCreation: body.dateOfCreation || Date.now()
+          };
+          // Create ticket
+          Ticket.create(ticket)
+            .then((ticket) => {
+              ticket.addUsers(users)  
+              res.status(201).send();
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(400).send({error: "Failed to create ticket"});
+          });
 
-    // Create ticket
-    console.log(Ticket)
-    console.log(Comment)
-    console.log(User)
-    Ticket.create(ticket)
-      .then(() => {
-        res.status(201).send();
+        } else {
+          res.status(400).send({error: "Invalid observer ids"});
+        }
       })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).send();
+      .catch((err)=>{
+        res.status(400).send({error: "Invalid observer ids"});
       });
+    } else {
+      res.status(400).send({error: "observers cannot be empty"})
+    }
+    
   };
   createComment = async (req, res) => {
     let { body, params } = req;

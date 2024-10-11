@@ -49,6 +49,10 @@ module.exports = (sequelize, DataTypes) => {
       Ticket.hasMany(models.Comment, {
         foreignKey: 'ticketId',
       })
+      Ticket.belongsToMany(models.User, {
+        through: 'TicketObservers',
+        foreignKey: 'ticketId'
+      })
     };
     return Ticket;
   };
