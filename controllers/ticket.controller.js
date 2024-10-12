@@ -111,7 +111,7 @@ class requestHandler {
   };
   // POST
   createTicket = async (req, res) => {
-    let { body } = req;
+    let { body, user } = req;
 
     let observers = body.observers;
     if (observers && observers.length > 0) {
@@ -125,7 +125,7 @@ class requestHandler {
             area: body.area || null,
             title: body.title,
             description: body.description || null,
-            requesterId: body.requesterId,
+            requesterId: user.id,
             status: "Novo",
             dateOfCreation: body.dateOfCreation || Date.now()
           };
@@ -154,13 +154,13 @@ class requestHandler {
     
   };
   createComment = async (req, res) => {
-    let { body, params } = req;
+    let { body, params, user } = req;
 
     // Create Ticket Comment object
     var comment = {
       content: body.content || null,
       ticketId: params.id,
-      commenterId: body.commenterId,
+      commenterId: user.id,
       date: Date.now()
     };
     
