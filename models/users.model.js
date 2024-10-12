@@ -61,10 +61,8 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Comment, {
       foreignKey: 'commenterId',
     })
-
-    User.belongsToMany(models.Ticket, {
-      through: 'TicketObservers',
-      foreignKey: 'observerId'
+    User.hasMany(models.Observer, {
+      foreignKey: 'userId',
     })
   };
   return User;

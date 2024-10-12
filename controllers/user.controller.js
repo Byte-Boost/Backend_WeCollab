@@ -70,7 +70,6 @@ class requestHandler {
   }
 
 
-
 // ACCOUNT ROUTE
   // POST
   registerUser = async (req, res) => {

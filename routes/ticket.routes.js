@@ -6,6 +6,8 @@ router.post('/', controller.createTicket);
 router.get('/', controller.getTickets);
 router.get('/:id', controller.getTicketById);
 router.put('/:id', controller.updateTicket);
+router.patch('/forward/:id', controller.forwardTicket);
+
 router.patch('/close/:id', controller.closeTicket);
 router.delete('/:id', controller.deleteTicket);
 // Comments on Comment table

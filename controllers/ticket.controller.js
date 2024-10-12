@@ -1,4 +1,4 @@
-const { Ticket, Comment, User } = require("../models");
+const { Ticket, Comment, User, Observer } = require("../models");
 const { Op } = require("sequelize");
 class requestHandler {
   // GET
@@ -26,7 +26,17 @@ class requestHandler {
       },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
-      limit: limit
+      limit: limit,
+      include: [
+        {
+          model: Observer,
+          attributes: ["id"],
+          include: {
+            model: User,
+            attributes: ["id", "name"],
+          }
+        }
+      ]
     };
 
     // Query & response
@@ -43,7 +53,18 @@ class requestHandler {
     let { params } = req;
     
     // Query & response
-    Ticket.findByPk(params.id)
+    Ticket.findByPk(params.id, {
+      include: [
+        {
+          model: Observer,
+          attributes: ["id"],
+          include: {
+            model: User,
+            attributes: ["id", "name"],
+          }
+        }
+      ]
+    })
       .then((ticket) => {
         res.status(200).send(ticket);
       })
@@ -71,7 +92,7 @@ class requestHandler {
       where: {ticketId: params.id},
       include: {
         model: User,
-        attributes: { exclude: ["password", "username"] },
+        attributes: { exclude: ["password", "username", "cpf"] },
       },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
@@ -111,7 +132,8 @@ class requestHandler {
           // Create ticket
           Ticket.create(ticket)
             .then((ticket) => {
-              ticket.addUsers(users)  
+              let observerList = users.map((user) => {return {userId: user.id, ticketId: ticket.id}});
+              Observer.bulkCreate(observerList);
               res.status(201).send();
             })
             .catch((err) => {
@@ -175,13 +197,11 @@ class requestHandler {
     );
 
   }
-  // PUT
+  // PUT & PATCH
   updateTicket = async (req, res) => {
     let { body, params } = req;
     Ticket.update({
         area: body.area,
-        status: body.status,
-        category: body.category,
         title: body.title,
         description: body.description,
         }, {
@@ -209,6 +229,30 @@ class requestHandler {
     });
 
     res.status(200).send();
+  }
+  forwardTicket = async (req, res) =>{
+    let { body, params } = req;
+    let observers = body.observers;
+    if (observers && observers.length > 0) {
+      // user has passed a non-empty array of observers
+      User.findAll({ where: { id: observers } })
+      .then(async (users) => {
+        if(users.length > 0){
+          // Check if at least one observer exists, and only then:
+          let observerList = users.map((user) => {return {userId: user.id, ticketId: params.id}});
+          await Observer.destroy({ where: { ticketId: params.id } });
+          await Observer.bulkCreate(observerList);
+          res.status(201).send();
+        } else {
+          res.status(400).send({error: "Invalid observer ids"});
+        }
+      })
+      .catch((err)=>{
+        res.status(400).send({error: "Invalid observer ids"});
+      });
+    } else {
+      res.status(400).send({error: "observers cannot be empty"})
+    }
   }
   // DELETE
   deleteTicket = (req, res) => {
