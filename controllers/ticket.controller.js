@@ -29,6 +29,11 @@ class requestHandler {
       limit: limit,
       include: [
         {
+          model: User,
+          as: 'Owner',
+          attributes: ["id", "name"],
+        },
+        {
           model: Observer,
           attributes: ["id"],
           include: {
@@ -55,6 +60,11 @@ class requestHandler {
     // Query & response
     Ticket.findByPk(params.id, {
       include: [
+        {
+          model: User,
+          as: 'Owner',
+          attributes: ["id", "name"],
+        },
         {
           model: Observer,
           attributes: ["id"],

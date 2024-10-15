@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     Ticket.associate = function(models) {
       Ticket.belongsTo(models.User, {
         foreignKey: 'requesterId',
+        as: 'Owner',
         onDelete: 'CASCADE'
       })
       Ticket.belongsTo(models.Area, {
