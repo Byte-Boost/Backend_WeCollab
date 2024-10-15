@@ -19,7 +19,7 @@ module.exports = router;
  * /register:
  *   post:
  *     tags: [Account]
- *     summary: Register a new seller
+ *     summary: Register an account
  *     requestBody:
  *       required: true
  *       content:
@@ -35,11 +35,15 @@ module.exports = router;
  *                 type: string
  *               password:
  *                 type: string
+ *               roleId:
+ *                 type: number
+ *               admin:
+ *                 type: boolean
  *     responses:
  *       201:
- *         description: Seller registered successfully
+ *         description: Account registered successfully
  *       400:
- *         description: Error occurred while registering seller
+ *         description: Error occurred while registering account
  */
 
 /**
@@ -47,7 +51,7 @@ module.exports = router;
  * /login:
  *   post:
  *     tags: [Account]
- *     summary: Login a seller
+ *     summary: Login an account
  *     requestBody:
  *       required: true
  *       content:
@@ -72,23 +76,56 @@ module.exports = router;
  *       401:
  *         description: Unauthorized
  */
-
 /**
  * @swagger
- * /delete/{id}:
- *   delete:
+ * /{id}:
+ *   patch:
  *     tags: [Account]
- *     summary: Delete a seller
+ *     summary: Update an account
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: The seller ID
+ *         description: The account ID
+ *     requestBody:   # Correct indentation
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               area:
+ *                 type: string 
+ *               roleId:
+ *                 type: number
+ *               admin:
+ *                 type: boolean
  *     responses:
  *       200:
- *         description: Seller deleted successfully
+ *         description: Account edited successfully
  *       400:
- *         description: Error occurred while deleting seller
+ *         description: Error occurred while editing account
+ */
+/**
+ * @swagger
+ * /{id}:
+ *   delete:
+ *     tags: [Account]
+ *     summary: Delete a account
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The account ID
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ *       400:
+ *         description: Error occurred while deleting account
  */
