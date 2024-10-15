@@ -18,7 +18,7 @@ module.exports = router;
  * @swagger
  * /register:
  *   post:
- *     tags: [Account]
+ *     tags: [Accounts]
  *     summary: Register an account
  *     requestBody:
  *       required: true
@@ -50,7 +50,7 @@ module.exports = router;
  * @swagger
  * /login:
  *   post:
- *     tags: [Account]
+ *     tags: [Accounts]
  *     summary: Login an account
  *     requestBody:
  *       required: true
@@ -80,7 +80,7 @@ module.exports = router;
  * @swagger
  * /{id}:
  *   patch:
- *     tags: [Account]
+ *     tags: [Accounts]
  *     summary: Update an account
  *     parameters:
  *       - in: path
@@ -114,7 +114,7 @@ module.exports = router;
  * @swagger
  * /{id}:
  *   delete:
- *     tags: [Account]
+ *     tags: [Accounts]
  *     summary: Delete a account
  *     parameters:
  *       - in: path
