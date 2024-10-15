@@ -10,7 +10,7 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Account
+ *   name: Accounts
  *   description: Account management
  */
 
