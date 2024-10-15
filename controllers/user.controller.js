@@ -6,8 +6,9 @@ const service = require("../services/account.services.js");
 class requestHandler {
   // GET
   getUsers = (req, res) => {
-    let { query } = req;
+    let { query, user } = req;
     // Filter options
+    let isAdmin = user.admin;
     let adminOnly = query.adminOnly;
     let startsWith = query.startsWith;
     let sortMethod = query.sortBy || "ID";
@@ -31,7 +32,7 @@ class requestHandler {
         admin: (adminOnly && adminOnly.toUpperCase() == "TRUE")? true : {[Op.ne]: null},
       },
       include: [{ model: Role, attributes: ["name"] }],
-      attributes: { exclude: ["password", "username"] },
+      attributes: isAdmin ? { exclude: ["password", "username"] } : ["id", "name"],
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
       limit: limit
