@@ -17,6 +17,8 @@ module.exports = router;
  *   get:
  *     tags: [Areas]
  *     summary: Get all areas
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Got all areas and their roles successfully
@@ -46,4 +48,6 @@ module.exports = router;
  *                               example: "Assistente Administrativo"
  *       400:
  *         description: Error occurred while getting areas
+ *       401:
+ *         description: Unauthorized - token missing or invalid
  */

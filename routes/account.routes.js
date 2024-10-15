@@ -20,6 +20,8 @@ module.exports = router;
  *   post:
  *     tags: [Accounts]
  *     summary: Register an account
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -44,8 +46,9 @@ module.exports = router;
  *         description: Account registered successfully
  *       400:
  *         description: Error occurred while registering account
+ *       401:
+ *         description: Unauthorized - token missing or invalid
  */
-
 /**
  * @swagger
  * /accounts/login:
@@ -65,7 +68,7 @@ module.exports = router;
  *                 type: string
  *     responses:
  *       200:
- *         description: Login successful.
+ *         description: Login successful. Use the returned token for authenticated requests.
  *         content:
  *           application/json:
  *             schema:
@@ -73,6 +76,9 @@ module.exports = router;
  *               properties:
  *                 token:
  *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Error occurred on login
  *       401:
  *         description: Unauthorized
  */
@@ -82,6 +88,8 @@ module.exports = router;
  *   patch:
  *     tags: [Accounts]
  *     summary: Update an account
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -89,7 +97,7 @@ module.exports = router;
  *         schema:
  *           type: integer
  *         description: The account ID
- *     requestBody:   # Correct indentation
+ *     requestBody:  
  *       required: true
  *       content:
  *         application/json:
@@ -109,6 +117,8 @@ module.exports = router;
  *         description: Account edited successfully
  *       400:
  *         description: Error occurred while editing account
+ *       401:
+ *         description: Unauthorized - token missing or invalid
  */
 /**
  * @swagger
@@ -116,6 +126,8 @@ module.exports = router;
  *   delete:
  *     tags: [Accounts]
  *     summary: Delete a account
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -128,4 +140,6 @@ module.exports = router;
  *         description: Account deleted successfully
  *       400:
  *         description: Error occurred while deleting account
+ *       401:
+ *         description: Unauthorized - token missing or invalid
  */

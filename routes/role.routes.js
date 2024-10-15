@@ -17,6 +17,8 @@ module.exports = router;
  *   get:
  *     tags: [Roles]
  *     summary: Get all roles
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Got all roles successfully
@@ -38,4 +40,6 @@ module.exports = router;
  *                         example: "Assistente Administrativo"
  *       400:
  *         description: Error occurred while getting roles
+ *       401:
+ *         description: Unauthorized - token missing or invalid
  */

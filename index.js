@@ -15,6 +15,15 @@ const options = {
     info: {
       title: 'JJM-Collab API',
       version: '0.8.0',
+    }, 
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
     },
   },
   apis: ['./routes/*.js'], // files containing annotations as above
