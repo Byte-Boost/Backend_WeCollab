@@ -13,7 +13,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /:
+ * /areas:
  *   get:
  *     tags: [Areas]
  *     summary: Get all areas

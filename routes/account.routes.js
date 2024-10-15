@@ -16,7 +16,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /register:
+ * /accounts/register:
  *   post:
  *     tags: [Accounts]
  *     summary: Register an account
@@ -48,7 +48,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /login:
+ * /accounts/login:
  *   post:
  *     tags: [Accounts]
  *     summary: Login an account
@@ -78,7 +78,7 @@ module.exports = router;
  */
 /**
  * @swagger
- * /{id}:
+ * /accounts/{id}:
  *   patch:
  *     tags: [Accounts]
  *     summary: Update an account
@@ -112,7 +112,7 @@ module.exports = router;
  */
 /**
  * @swagger
- * /{id}:
+ * /accounts/{id}:
  *   delete:
  *     tags: [Accounts]
  *     summary: Delete a account
