@@ -15,7 +15,7 @@ module.exports = router;
  * @swagger
  * /:
  *   get:
- *     tags: [Area]
+ *     tags: [Areas]
  *     summary: Get all areas
  *     responses:
  *       200:
