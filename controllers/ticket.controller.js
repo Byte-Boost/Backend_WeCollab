@@ -7,6 +7,7 @@ class requestHandler {
     let currentUser = await User.findOne({ where: { id: user.id } });
     // Filter options
     let filter = query.filter || null;
+    let status = null;
     let sortMethod = query.sortBy || "DATEOFCREATION";
     let page = query.page ? parseInt(query.page) : 1;
     let limit = query.limit ? parseInt(query.limit) : null;
@@ -17,10 +18,13 @@ class requestHandler {
           return [['dateOfCreation', 'ASC']];
       }
     }
+    if (query.status == "closed") status = "Concluído"
+    if (query.status == "open") status = ["Novo", "Em Andamento"]
 
     // Query options
     let findOpt = {
       where: {
+        status: status ? status : {[Op.ne]: null},
         area: filter == "area" ? currentUser.area : {[Op.ne]: null},
         requesterId: (filter == null && currentUser.admin) || filter == "area" ? {[Op.ne]: null} : currentUser.id
       },
