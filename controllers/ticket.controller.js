@@ -6,8 +6,9 @@ class requestHandler {
     let { query, user } = req;
     let currentUser = await User.findOne({ where: { id: user.id } });
     // Filter options
-    let filter = query.filter || null;
+    let area = query.area || null;
     let status = null;
+    let userRelation = null;
     let sortMethod = query.sortBy || "DATEOFCREATION";
     let page = query.page ? parseInt(query.page) : 1;
     let limit = query.limit ? parseInt(query.limit) : null;
@@ -20,13 +21,15 @@ class requestHandler {
     }
     if (query.status == "closed") status = "Concluído"
     if (query.status == "open") status = ["Novo", "Em Andamento"]
-
+    if (query.userRelation == "created") userRelation = "owner";
+    if (query.userRelation == "observed") userRelation = "observer";
+    
     // Query options
     let findOpt = {
       where: {
         status: status ? status : {[Op.ne]: null},
-        area: filter == "area" ? currentUser.area : {[Op.ne]: null},
-        requesterId: (filter == null && currentUser.admin) || filter == "area" ? {[Op.ne]: null} : currentUser.id
+        area: area ? area : {[Op.ne]: null},
+        requesterId: ((currentUser.admin && userRelation == "owner")||(!currentUser.admin && ["owner", null].includes(userRelation))) ? currentUser.id : {[Op.ne]: null}
       },
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
@@ -39,11 +42,14 @@ class requestHandler {
         },
         {
           model: Observer,
-          attributes: ["id"],
+          attributes: ["id", "userId"],
           include: {
             model: User,
-            attributes: ["id", "name"],
-          }
+            attributes: ["id", "name"]
+          },
+          where: {
+            userId: userRelation=="observer" ? currentUser.id : {[Op.ne]: null}
+          },
         }
       ]
     };
