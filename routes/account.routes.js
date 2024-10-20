@@ -108,8 +108,10 @@ module.exports = router;
  *                 type: string
  *               area:
  *                 type: string 
- *               roleId:
- *                 type: number
+ *               username:
+ *                 type: string 
+ *               role:
+ *                 type: string
  *               admin:
  *                 type: boolean
  *     responses:

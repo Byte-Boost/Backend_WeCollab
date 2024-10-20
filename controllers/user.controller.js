@@ -32,7 +32,7 @@ class requestHandler {
         admin: (adminOnly && adminOnly.toUpperCase() == "TRUE")? true : {[Op.ne]: null},
       },
       include: [{ model: Role, attributes: ["name"] }],
-      attributes: isAdmin ? { exclude: ["password", "username"] } : ["id", "name"],
+      attributes: isAdmin ? { exclude: ["password"] } : ["id", "name"],
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
       limit: limit
@@ -50,7 +50,7 @@ class requestHandler {
   };
   getUsersByCPF = (req, res) => {
     let { params } = req;
-    User.findAll({ where: { cpf: params.cpf }, include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password", "username"]} })
+    User.findAll({ where: { cpf: params.cpf }, include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password"]} })
       .then((users) => {
         res.status(200).send(users);
       })
@@ -61,7 +61,7 @@ class requestHandler {
   };
   getUsersById = (req, res) => {  
     let { params } = req;
-    User.findByPk(params.id, {include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password", "username"]}}).then((user) => {
+    User.findByPk(params.id, {include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password"]}}).then((user) => {
             res.status(200).send(user);
           })
           .catch((err) => {
@@ -139,6 +139,7 @@ class requestHandler {
 
     if (role !== null){
       User.update({
+        username: body.username,
         name: body.name,
         area: body.area,
         roleId: role,

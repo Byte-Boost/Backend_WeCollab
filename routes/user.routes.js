@@ -47,6 +47,9 @@ module.exports = router;
  *                       area:
  *                         type: string
  *                         example: "Administrativa"
+ *                       username:
+ *                         type: string
+ *                         example: "Johnnysmith"
  *                       roleId:
  *                         type: number
  *                         example: 1
@@ -113,6 +116,9 @@ module.exports = router;
  *                       area:
  *                         type: string
  *                         example: "Administrativa"
+ *                       username:
+ *                         type: string
+ *                         example: "Johnnysmith"
  *                       roleId:
  *                         type: number
  *                         example: 1
@@ -176,6 +182,9 @@ module.exports = router;
  *                       area:
  *                         type: string
  *                         example: "Administrativa"
+ *                       username:
+ *                         type: string
+ *                         example: "Johnnysmith"
  *                       roleId:
  *                         type: number
  *                         example: 1
