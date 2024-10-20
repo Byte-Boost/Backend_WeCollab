@@ -1,4 +1,4 @@
-const { User, Ticket, Comment } = require("../models/index.js");
+const { User, Ticket, Comment, Observer } = require("../models/index.js");
 const { Op } = require('sequelize');
 const service = require("./account.services.js");
 
@@ -12,70 +12,100 @@ class dummyDataService {
             role: "Manager",
             admin: true
         };
-        let user1 = {
-            name: "Jaqueline Veloso",
-            cpf: "11111111111",
-            username: "jaquemfvs",
-            area: "Recursos Humanos",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        let user2 = {
-            name: "João Eduardo",
-            cpf: "22222222222",
-            username: "joao-eduardo17",
-            area: "Suporte",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        let user3 = {
-            name: "Marcos Antônio",
-            cpf: "33333333333",
-            username: "OOutroMarcos",
-            area: "Suporte",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        let user4 = {
-            name: "Markos Vinicius Nunes",
-            cpf: "44444444444",
-            username: "MarkVN2",
-            area: "Suporte",
-            password: await service.getHashed("123"),
-            role: "Manager",
-            admin: false
-        };
-        let user5 = {
-            name: "Sandro-Pimentel",
-            cpf: "55555555555",
-            username: "Sandro-Pimentel",
-            area: "Desenvolvimento",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        let user6 = {
-            name: "Vinicius Felipe Forcato",
-            cpf: "66666666666",
-            username: "nininhosam",
-            area: "Desenvolvimento",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        let user7 = {
-            name: "Vitor Saborito",
-            cpf: "77777777777",
-            username: "VituuSaborito",
-            area: "Desenvolvimento",
-            password: await service.getHashed("123"),
-            role: "User",
-            admin: false
-        };
-        User.bulkCreate([admin, user1, user2, user3, user4, user5, user6, user7])
+        const dummyUsers = [
+            {
+              name: "Monkey D. Luffy",
+              cpf: "12345678901",
+              area: "Gestao",
+              username: "luffy",
+              password: await service.getHashed("password123"),
+              roleId: 16,
+              admin: true,
+            },
+            {
+              name: "Roronoa Zoro",
+              cpf: "23456789012",
+              area: "Tecnica",
+              username: "zoro",
+              password: await service.getHashed("password123"),
+              roleId: 10,
+              admin: false,
+            },
+            {
+              name: "Nami",
+              cpf: "34567890123",
+              area: "Negocios",
+              username: "nami",
+              password: await service.getHashed("password123"),
+              roleId: 7,
+              admin: false,
+            },
+            {
+              name: "Usopp",
+              cpf: "45678901234",
+              area: "Tecnica",
+              username: "usopp",
+              password: await service.getHashed("password123"),
+              roleId: 12,
+              admin: false,
+            },
+            {
+              name: "Sanji",
+              cpf: "56789012345",
+              area: "Administrativa",
+              username: "sanji",
+              password: await service.getHashed("password123"),
+              roleId: 3,
+              admin: false,
+            },
+            {
+              name: "Tony Tony Chopper",
+              cpf: "67890123456",
+              area: "Tecnica",
+              username: "chopper",
+              password: await service.getHashed("password123"),
+              roleId: 8,
+              admin: false,
+            },
+            {
+              name: "Nico Robin",
+              cpf: "78901234567",
+              area: "Administrativa",
+              username: "robin",
+              password: await service.getHashed("password123"),
+              roleId: 2,
+              admin: false,
+            },
+            {
+              name: "Franky",
+              cpf: "89012345678",
+              area: "Tecnica",
+              username: "franky",
+              password: await service.getHashed("password123"),
+              roleId: 15,
+              admin: false,
+            },
+            {
+              name: "Brook",
+              cpf: "90123456789",
+              area: "Administrativa",
+              username: "brook",
+              password: await service.getHashed("password123"),
+              roleId: 5,
+              admin: false,
+            },
+            {
+              name: "Jinbe",
+              cpf: "01234567890",
+              area: "Gestao",
+              username: "jinbe",
+              password: await service.getHashed("password123"),
+              roleId: 17,
+              admin: true,
+            }
+          ];
+          
+        User.bulkCreate([admin, ...dummyUsers])
             .then(() => {
                 console.log("Dummy Data created successfully");
             })
@@ -84,78 +114,152 @@ class dummyDataService {
             });
         
             
-        let ticket1 = {
-            area: "Recursos Humanos",
-            status: "Concluído",
-            category: "Suporte",
-            title: "Necessito de mais funcionarios",
-            description: "A quantidade de trabalho excedeu o experado",
-            requesterId: 2,
-            dateOfCreation: new Date("2024-06-10")
-        };
-        let ticket2 = {
-            area: "Area de teste",
-            status: "Em andamento",
-            category: "Agendamento",
-            title: "Reuniões entre os dias 06 e 09",
-            description: "Pedido para agendar reuniões com [xxxx] entre os dias 06/10 e 09/10",
-            requesterId: 4,
-            dateOfCreation: new Date("2024-09-25")
-        };
-        let ticket3 = {
-            area: "Suporte",
-            status: "Novo",
-            category: "Suporte",
-            title: "Sistemas estão fora do ar desde as 8am",
-            description: "Os sistemas internos cairam as 8am do dia 25/09, e ainda não retornaram",
-            requesterId: 7,
-            dateOfCreation: new Date("2024-09-25")
-        };
-        Ticket.bulkCreate([ticket1, ticket2, ticket3])
+        const tickets = [
+            {
+                area: "Tecnica",
+                title: "Network Optimization",
+                description: "Improving the network speed and stability.",
+                requesterId: 3, // Roronoa Zoro
+                status: "Em Andamento",
+                dateOfCreation: new Date("2023-09-15"),
+            },
+            {
+                area: "Negocios",
+                title: "Market Research Analysis",
+                description: "Conducting a thorough analysis of current market trends.",
+                requesterId: 4, // Nami
+                status: "Novo",
+                dateOfCreation: new Date("2023-09-22"),
+            },
+            {
+                area: "Administrativa",
+                title: "Office Supplies Restock",
+                description: "Ordering and restocking office supplies for the month.",
+                requesterId: 7, // Nico Robin
+                status: "Concluído",
+                dateOfCreation: new Date("2023-10-01"),
+            },
+            {
+                area: "Tecnica",
+                title: "Server Maintenance",
+                description: "Scheduled maintenance of the main servers.",
+                requesterId: 6, // Chopper
+                status: "Em Andamento",
+                dateOfCreation: new Date("2023-10-05"),
+            },
+            {
+                area: "Administrativa",
+                title: "Staff Attendance",
+                description: "Monitoring and reporting daily attendance records.",
+                requesterId: 9, // Brook
+                status: "Novo",
+                dateOfCreation: new Date("2024-10-10"),
+            },
+            {
+                area: "Gestao",
+                title: "Team Leadership Training",
+                description: "Conducting leadership training for new managers.",
+                requesterId: 10, // Jinbe
+                status: "Concluído",
+                dateOfCreation: new Date("2024-10-18"),
+            }
+        ];
+            
+        const observers = [
+            { userId: 4, ticketId: 1 }, // Nami
+            { userId: 6, ticketId: 1 }, // Chopper
+            { userId: 2, ticketId: 2 }, // Luffy
+            { userId: 7, ticketId: 2 }, // Robin
+            { userId: 5, ticketId: 3 }, // Sanji
+            { userId: 10, ticketId: 3 }, // Jinbe
+            { userId: 8, ticketId: 4 }, // Franky
+            { userId: 9, ticketId: 4 }, // Brook
+            { userId: 5, ticketId: 5 }, // Sanji
+            { userId: 2, ticketId: 5 }, // Luffy
+            { userId: 4, ticketId: 5 }, // Nami
+            { userId: 3, ticketId: 6 }, // Zoro
+            { userId: 8, ticketId: 6 }, // Franky
+            { userId: 7, ticketId: 6 }  // Robin
+        ];
+              
+        Ticket.bulkCreate(tickets)
         .then(() => {
+
+            Observer.bulkCreate(observers).then(()=>{
+                console.log("Observers created successfully");
+            }).catch((err)=>{
+                console.log("Error creating observers: ", err);
+            });
+
             console.log("Tickets created successfully");
         })
         .catch((err) => {
             console.log("Error creating tickets: ", err);
         });
 
-        let comment1 = {
-            content: "Pedido sendo considerado.",
+        // Ticket 1 - "Network Optimization" (2 comments)
+        let comments = [
+            {
+            content: "This issue needs to be resolved ASAP!",
             ticketId: 1,
-            commenterId: 1,
-            date: new Date("2024-06-11")
-        };
-        let comment2 = {
-            content: "Pedido aprovado.",
+            commenterId: 2, // Luffy
+            date: new Date("2023-09-16")
+            },
+            {
+            content: "Working on the network adjustments now.",
             ticketId: 1,
-            commenterId: 1,
-            date: new Date("2024-06-12")
-        };
-        let comment3 = {
-            content: "Pedido concedido, Ticket realizado.",
-            ticketId: 1,
-            commenterId: 1,
-            date: new Date("2024-06-12")
-        };
-        let comment4 = {
-            content: "Não será possível agendar reuniões no dia 06/10",
-            ticketId: 2,
-            commenterId: 1,
-            date: new Date("2024-09-25")
-        };
-        let comment5 = {
-            content: "Será possível para os dias 07-10 de outubro, nesse caso?",
-            ticketId: 2,
-            commenterId: 4,
-            date: new Date("2024-09-26")
-        };
-        let comment6 = {
-            content: "Sim, estes dias estão disponíveis. gostária de agendá-los?",
-            ticketId: 2,
-            commenterId: 1,
-            date: new Date("2024-09-26")
-        };
-        Comment.bulkCreate([comment1, comment2, comment3, comment4, comment5, comment6])
+            commenterId: 3, // Zoro
+            date: new Date("2023-09-17")
+            },
+        
+            // Ticket 2 - "Market Research Analysis" (No comments)
+        
+            // Ticket 3 - "Office Supplies Restock" (1 comment)
+            {
+            content: "Supplies have been ordered, waiting for confirmation.",
+            ticketId: 3,
+            commenterId: 7, // Robin
+            date: new Date("2023-10-02")
+            },
+        
+            // Ticket 4 - "Server Maintenance" (3 comments)
+            {
+            content: "Scheduled maintenance will start tomorrow.",
+            ticketId: 4,
+            commenterId: 6, // Chopper
+            date: new Date("2023-10-06")
+            },
+            {
+            content: "Servers are down for maintenance now.",
+            ticketId: 4,
+            commenterId: 8, // Franky
+            date: new Date("2023-10-06")
+            },
+            {
+            content: "Maintenance complete, everything is up and running.",
+            ticketId: 4,
+            commenterId: 8, // Franky
+            date: new Date("2023-10-07")
+            },
+        
+            // Ticket 5 - "Staff Attendance" (No comments)
+        
+            // Ticket 6 - "Team Leadership Training" (2 comments)
+            {
+            content: "Training materials have been shared with the team.",
+            ticketId: 6,
+            commenterId: 10, // Jinbe
+            date: new Date("2023-10-19")
+            },
+            {
+            content: "All teams have completed the training successfully.",
+            ticketId: 6,
+            commenterId: 10, // Jinbe
+            date: new Date("2023-10-20")
+            }
+        ];
+  
+        Comment.bulkCreate(comments)
         .then(() => {
             console.log("Comments created successfully");
         })

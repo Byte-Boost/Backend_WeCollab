@@ -34,6 +34,7 @@ class requestHandler {
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
       limit: limit,
+      distinct: true,
       include: [
         {
           model: User,
@@ -55,7 +56,7 @@ class requestHandler {
     };
 
     // Query & response
-    Ticket.findAll(findOpt)
+    Ticket.findAndCountAll(findOpt)
       .then((tickets) => {
         res.status(200).send(tickets);
       })
