@@ -42,6 +42,7 @@ app.use('/users', require('./routes/user.routes'));
 app.use('/tickets', require('./routes/ticket.routes'));
 app.use('/areas', require('./routes/area.routes'));
 app.use('/roles', require('./routes/role.routes'));
+app.use('/archives', require('./routes/archive.routes'));
 
 db.sequelize.sync().then(async ()=>{
   await startup.setupAreas()
