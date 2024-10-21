@@ -186,6 +186,74 @@ class dummyDataService {
         .then(() => {
 
             Observer.bulkCreate(observers).then(()=>{
+              let comments = [
+                {
+                content: "This issue needs to be resolved ASAP!",
+                ticketId: 1,
+                commenterId: 2, // Luffy
+                date: new Date("2023-09-16")
+                },
+                {
+                content: "Working on the network adjustments now.",
+                ticketId: 1,
+                commenterId: 3, // Zoro
+                date: new Date("2023-09-17")
+                },
+            
+                // Ticket 2 - "Market Research Analysis" (No comments)
+            
+                // Ticket 3 - "Office Supplies Restock" (1 comment)
+                {
+                content: "Supplies have been ordered, waiting for confirmation.",
+                ticketId: 3,
+                commenterId: 7, // Robin
+                date: new Date("2023-10-02")
+                },
+            
+                // Ticket 4 - "Server Maintenance" (3 comments)
+                {
+                content: "Scheduled maintenance will start tomorrow.",
+                ticketId: 4,
+                commenterId: 6, // Chopper
+                date: new Date("2023-10-06")
+                },
+                {
+                content: "Servers are down for maintenance now.",
+                ticketId: 4,
+                commenterId: 8, // Franky
+                date: new Date("2023-10-06")
+                },
+                {
+                content: "Maintenance complete, everything is up and running.",
+                ticketId: 4,
+                commenterId: 8, // Franky
+                date: new Date("2023-10-07")
+                },
+            
+                // Ticket 5 - "Staff Attendance" (No comments)
+            
+                // Ticket 6 - "Team Leadership Training" (2 comments)
+                {
+                content: "Training materials have been shared with the team.",
+                ticketId: 6,
+                commenterId: 10, // Jinbe
+                date: new Date("2023-10-19")
+                },
+                {
+                content: "All teams have completed the training successfully.",
+                ticketId: 6,
+                commenterId: 10, // Jinbe
+                date: new Date("2023-10-20")
+                }
+            ];
+      
+            Comment.bulkCreate(comments)
+            .then(() => {
+                console.log("Comments created successfully");
+            })
+            .catch((err) => {
+                console.log("Error creating comments: ", err);
+            });
                 console.log("Observers created successfully");
             }).catch((err)=>{
                 console.log("Error creating observers: ", err);
@@ -198,74 +266,7 @@ class dummyDataService {
         });
 
         // Ticket 1 - "Network Optimization" (2 comments)
-        let comments = [
-            {
-            content: "This issue needs to be resolved ASAP!",
-            ticketId: 1,
-            commenterId: 2, // Luffy
-            date: new Date("2023-09-16")
-            },
-            {
-            content: "Working on the network adjustments now.",
-            ticketId: 1,
-            commenterId: 3, // Zoro
-            date: new Date("2023-09-17")
-            },
-        
-            // Ticket 2 - "Market Research Analysis" (No comments)
-        
-            // Ticket 3 - "Office Supplies Restock" (1 comment)
-            {
-            content: "Supplies have been ordered, waiting for confirmation.",
-            ticketId: 3,
-            commenterId: 7, // Robin
-            date: new Date("2023-10-02")
-            },
-        
-            // Ticket 4 - "Server Maintenance" (3 comments)
-            {
-            content: "Scheduled maintenance will start tomorrow.",
-            ticketId: 4,
-            commenterId: 6, // Chopper
-            date: new Date("2023-10-06")
-            },
-            {
-            content: "Servers are down for maintenance now.",
-            ticketId: 4,
-            commenterId: 8, // Franky
-            date: new Date("2023-10-06")
-            },
-            {
-            content: "Maintenance complete, everything is up and running.",
-            ticketId: 4,
-            commenterId: 8, // Franky
-            date: new Date("2023-10-07")
-            },
-        
-            // Ticket 5 - "Staff Attendance" (No comments)
-        
-            // Ticket 6 - "Team Leadership Training" (2 comments)
-            {
-            content: "Training materials have been shared with the team.",
-            ticketId: 6,
-            commenterId: 10, // Jinbe
-            date: new Date("2023-10-19")
-            },
-            {
-            content: "All teams have completed the training successfully.",
-            ticketId: 6,
-            commenterId: 10, // Jinbe
-            date: new Date("2023-10-20")
-            }
-        ];
-  
-        Comment.bulkCreate(comments)
-        .then(() => {
-            console.log("Comments created successfully");
-        })
-        .catch((err) => {
-            console.log("Error creating comments: ", err);
-        });
+
     }
 }
 

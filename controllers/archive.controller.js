@@ -74,7 +74,7 @@ class requestHandler {
       let archive = {
         name: file.originalname,
         filePath : file.filename,
-        areaName : User.find({where: {id: body.userId}, attributes: ['area']}),
+        areaName : null,
         userId : body.userId,
         uploaderId : user.id
       }
