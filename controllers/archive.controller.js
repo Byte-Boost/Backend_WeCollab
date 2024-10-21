@@ -1,6 +1,6 @@
 const { Archive, Area, User } = require("../models");
 const { Op } = require("sequelize");
-
+const fs = require('fs');
 const path = require('path');
 
 
@@ -11,14 +11,26 @@ class requestHandler {
     try {
       const { filename } = req.params;
       const filePath = path.join(__dirname, '../uploads', filename);
-        res.download(filePath, filename, (err) => {
-          if (err) {
-            res.status(500).send({ message: "Error downloading file", error: err });
-          }
-        });
-      } catch (error) {
-        res.status(500).send({ message: "Error downloading file", error });
+
+      // Log the file path to debug
+      console.log(`Attempting to download file: ${filePath}`);
+
+      // Check if the file exists
+      if (!fs.existsSync(filePath)) {
+        console.error(`File not found: ${filePath}`);
+        return res.status(404).send({ message: "File not found" });
       }
+
+      res.download(filePath, filename, (err) => {
+        if (err) {
+          console.error(`Error downloading file: ${err}`);
+          res.status(500).send({ message: "Error downloading file", error: err });
+        }
+      });
+    } catch (error) {
+      console.error(`Error in downloadArchive method: ${error}`);
+      res.status(500).send({ message: "Error downloading file", error });
+    }
   };
   getArchives = async (req, res) => {
     try {
@@ -28,7 +40,7 @@ class requestHandler {
           where: {
             userId: user.id
           },
-          attributes: ['filePath','name','area','userId',]
+          attributes: ['filePath','name','userId','id']
         });
         res.status(200).send(archives);
       }
@@ -40,7 +52,7 @@ class requestHandler {
       const archives = await Archive.findAll(
       {
         where: { areaName : user.area },
-        attributes: ['filePath','name','area','userId',] // Select only the filePath and name attributes
+        attributes: ['filePath','name','areaName','userId','id'] // Select only the filePath and name attributes
       });
       res.status(200).send(archives);
       }
@@ -59,11 +71,10 @@ class requestHandler {
 
       let { body, params, user } = req;
       console.log(user.id)
-      const filePath = path.join('uploads', file.filename);
       let archive = {
         name: file.originalname,
-        filePath : filePath,
-        areaName : body.areaName,
+        filePath : file.filename,
+        areaName : User.find({where: {id: body.userId}, attributes: ['area']}),
         userId : body.userId,
         uploaderId : user.id
       }
