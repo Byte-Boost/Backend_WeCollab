@@ -68,13 +68,20 @@ class requestHandler {
       if (!file) {
         return res.status(400).send({ message: "No file uploaded" });
       }
-
+      
       let { body, params, user } = req;
-      console.log(user.id)
+
+      const foundUser = await await User.findOne({ where: { id:body.userId }, attributes: ['area'] });
+      console.log(foundUser);
+      if (!foundUser) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      const areaName = foundUser.area ? foundUser.area : null;
+
       let archive = {
         name: file.originalname,
         filePath : file.filename,
-        areaName : null,
+        areaName : areaName,
         userId : body.userId,
         uploaderId : user.id
       }
