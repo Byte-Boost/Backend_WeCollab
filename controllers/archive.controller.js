@@ -90,5 +90,23 @@ class requestHandler {
       res.status(500).send({ message: "Error uploading file", error });
     }
   };
+  //DELETE
+  deleteArchive = async (req, res) => {
+    try {
+      const { filename } = req.params;
+      const archive = await Archive.findOne({ where: { filePath : filename } });
+      if (!archive) {
+        return res.status(404).send({ message: "Archive not found" });
+      }
+      const filePath = path.join(__dirname, '../uploads', archive.filePath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+      await Archive.destroy({ where: { filePath : filename } });
+      res.status(200).send({ message: "Archive deleted successfully" });
+    } catch (error) {
+      res.status(500).send({ message: "Error deleting archive", error });
+    }
+  }
 }
 module.exports = new requestHandler();

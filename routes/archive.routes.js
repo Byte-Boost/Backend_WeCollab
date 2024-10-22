@@ -17,5 +17,6 @@ const storage = multer.diskStorage({
   
 router.post('/upload',adminMiddleware, upload.single('archive'), controller.uploadArchive);
 router.get('/download/:filename', controller.downloadArchive);
+router.delete('/delete/:filename', adminMiddleware, controller.deleteArchive);
 router.get('/', controller.getArchives);
 module.exports = router;
