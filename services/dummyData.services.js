@@ -1,27 +1,9 @@
 const { User, Ticket, Comment, Observer } = require("../models/index.js");
 const { Op } = require('sequelize');
 const service = require("./account.services.js");
-const fs = require('fs');
-const path = require('path');
-
-
 
 class dummyDataService {
-    async deleteUploads(){
-      fs.readdir('./uploads', (err, files) => {
-          if (err) throw err;
-          // console.log(files)
-          for (const file of files) {
-          if (file != '.gitkeep')
-            fs.unlink(path.join('./uploads', file), (err) => {
-              if (err) throw err;
-            });
-          }
-        });
-    }
-  
     async generateDummyData(){
-        this.deleteUploads()
         let admin = {
             name: process.env.ADM_CREDENTIALS_NAME,
             cpf: process.env.ADM_CREDENTIALS_CPF,
