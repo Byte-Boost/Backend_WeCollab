@@ -45,7 +45,7 @@ app.use('/roles', require('./routes/role.routes'));
 app.use('/archives', require('./routes/archive.routes'));
 
 db.sequelize.sync().then(async ()=>{
-  await startup.setupAreas()
+  await startup.setupAreas();
   // Create an admin user if it doesn't exist
   if (process.env.DEVELOPMENT_TESTS) dummyData.generateDummyData();
   else startup.generateAdmin();
