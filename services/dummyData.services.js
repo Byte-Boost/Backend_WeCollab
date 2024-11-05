@@ -120,7 +120,7 @@ class dummyDataService {
                 title: "Network Optimization",
                 description: "Improving the network speed and stability.",
                 requesterId: 3, // Ava Thompson
-                status: "Em Andamento",
+                status: "Em andamento",
                 dateOfCreation: new Date("2023-09-15"),
             },
             {
@@ -144,7 +144,7 @@ class dummyDataService {
                 title: "Server Maintenance",
                 description: "Scheduled maintenance of the main servers.",
                 requesterId: 6, // Isabella Kim
-                status: "Em Andamento",
+                status: "Em andamento",
                 dateOfCreation: new Date("2023-10-05"),
             },
             {
