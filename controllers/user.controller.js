@@ -31,15 +31,15 @@ class requestHandler {
         name: startsWith ? {[Op.regexp]: `^${startsWith}`} : {[Op.ne]: null},
         admin: (adminOnly && adminOnly.toUpperCase() == "TRUE")? true : {[Op.ne]: null},
       },
-      include: [{ model: Role, attributes: ["name"] }],
-      attributes: isAdmin ? { exclude: ["password"] } : ["id", "name"],
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
-      limit: limit
+      limit: limit,
+      include: [{ model: Role, attributes: ["name"] }],
+      attributes: isAdmin ? { exclude: ["password"] } : ["id", "name"],
     };
 
     // Query & response
-    User.findAll(findOpt)
+    User.findAndCountAll(findOpt)
       .then((users) => {
         res.status(200).send(users);
       })
