@@ -3,6 +3,7 @@ const router = require('express').Router();
 
 // Data routes
 router.get('/completedRatio', controller.getFinishedRatio);
+router.get('/completionSpeed', controller.getTicketSpeed);
 
 module.exports = router;
 
