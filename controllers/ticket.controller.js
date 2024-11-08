@@ -204,7 +204,7 @@ class requestHandler {
     let { params } = req;
 
     await Ticket.update(
-      {status: "Concluído"},
+      {status: "Concluído", dateOfConclusion: Date.now()},
       {
         where: {
           id: params.id
