@@ -5,6 +5,8 @@ const router = require('express').Router();
 router.get('/', controller.getUsers);
 router.get('/cpf/:cpf', adminMiddleware, controller.getUsersByCPF);
 router.get('/:id', adminMiddleware, controller.getUsersById);
+router.put('/:id/reset-password', adminMiddleware, controller.resetPassword);
+router.put('/:id/update-password', controller.updatePassword);
 module.exports = router;
 
 /**
@@ -209,4 +211,54 @@ module.exports = router;
  *         description: Error occurred while editing account
  *       401:
  *         description: Unauthorized - token missing or invalid
+ */
+/**
+ * @swagger
+ * /users/{id}/reset-password:
+ *   put:
+ *     summary: Resets a user's password to a default password
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: user id
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *       500:
+ *         description: Error resetting password
+ * 
+ * /users/{id}/update-password:
+ *   put:
+ *     summary: Update a user's password after checking the current password
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: user id
+ *       - in: body
+ *         name: password
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             currentPassword:
+ *               type: string
+ *               example: "currentPassword"
+ *             newPassword:
+ *               type: string
+ *               example: "newPassword"
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       401:
+ *         description: Current password incorrect
+ *       500:
+ *         description: Error updating password
  */

@@ -17,7 +17,6 @@ class accountService {
         const token = jwt.sign({ "id" : user.id, "username" : user.username, "role": user.roleId, "area": user.area, "admin": user.admin}, process.env.JWT_SECRET);
         return token;
     }
-
     login = async (user, password)=>{
         const passwordMatches = await this.compareHash(password, user.password);
         if(passwordMatches) return this.getToken(user);
