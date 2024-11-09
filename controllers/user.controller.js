@@ -177,26 +177,28 @@ class requestHandler {
   };
 
   updatePassword = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { currentPassword, newPassword } = req.body;
+    const { user, body } = req;
+    User.findByPk(user.id).then(async (fullUser)=>{
+      const passwordMatch = await service.compareHash(body.currentPassword, fullUser.password);
       
-      const user = await User.findByPk(id);
-      if (!user) {
-        return res.status(404).send({ error: "User not found" });
-      }
-      const passwordMatch = await service.compareHash(currentPassword, user.password);
       if (!passwordMatch) {
         return res.status(401).send({ error: "Current password incorrect" });
       }
+  
+      const hashedNewPassword = await service.getHashed(body.newPassword);
+      
+      User.update({ password: hashedNewPassword }, { where: { id: user.id } })
+        .then(()=>{
+            res.status(200).send();
+        }).catch ((error)=>{
+          console.error(error);
+          res.status(500).send({ error: "Error updating password" });
+        }) 
 
-      const hashedNewPassword = await service.getHashed(newPassword);
-      await User.update({ password: hashedNewPassword }, { where: { id } });
-      res.status(200).send();
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "Error updating password" });
-    }
+    }).catch((error)=>{
+        console.error(error);
+        res.status(500).send({ error: "Error finding user" });
+    })
   };
   // DELETE
   deleteUser = (req, res) => {
