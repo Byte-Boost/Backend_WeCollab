@@ -5,8 +5,8 @@ const router = require('express').Router();
 router.get('/', controller.getUsers);
 router.get('/cpf/:cpf', adminMiddleware, controller.getUsersByCPF);
 router.get('/:id', adminMiddleware, controller.getUsersById);
-router.put('/:id/reset-password', adminMiddleware, controller.resetPassword);
-router.put('/:id/update-password', controller.updatePassword);
+router.patch('/:id/reset-password', adminMiddleware, controller.resetPassword);
+router.patch('/:id/update-password', controller.updatePassword);
 module.exports = router;
 
 /**

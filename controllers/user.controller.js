@@ -161,6 +161,43 @@ class requestHandler {
     }
 
   }
+
+  resetPassword = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const defaultPassword = "123456"; 
+      const hashedPassword = await service.getHashed(defaultPassword);
+      
+      await User.update({ password: hashedPassword }, { where: { id } });
+      res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Error resetting password" });
+    }
+  };
+
+  updatePassword = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { currentPassword, newPassword } = req.body;
+      
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).send({ error: "User not found" });
+      }
+      const passwordMatch = await service.compareHash(currentPassword, user.password);
+      if (!passwordMatch) {
+        return res.status(401).send({ error: "Current password incorrect" });
+      }
+
+      const hashedNewPassword = await service.getHashed(newPassword);
+      await User.update({ password: hashedNewPassword }, { where: { id } });
+      res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Error updating password" });
+    }
+  };
   // DELETE
   deleteUser = (req, res) => {
     let { params } = req;
@@ -171,46 +208,6 @@ class requestHandler {
         res.status(400).send();
       });
   };
-    // Função para resetar senha para padrão
-    resetPassword = async (req, res) => {
-      try {
-        const { id } = req.params;
-        const defaultPassword = "123456"; // Defina a senha padrão
-        const hashedPassword = await service.getHashed(defaultPassword);
-        
-        await User.update({ password: hashedPassword }, { where: { id } });
-        res.status(200).send({ message: "Password reset successfully" });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: "Error resetting password" });
-      }
-    };
-  
-    // Função para atualizar senha
-    updatePassword = async (req, res) => {
-      try {
-        const { id } = req.params;
-        const { currentPassword, newPassword } = req.body;
-        
-        const user = await User.findByPk(id);
-        if (!user) {
-          return res.status(404).send({ error: "User not found" });
-        }
-        console.log(user.password);
-        console.log(currentPassword);
-        const passwordMatch = await service.compareHash(currentPassword, user.password);
-        if (!passwordMatch) {
-          return res.status(401).send({ error: "Current password incorrect" });
-        }
-  
-        const hashedNewPassword = await service.getHashed(newPassword);
-        await User.update({ password: hashedNewPassword }, { where: { id } });
-        res.status(200).send({ message: "Password updated successfully" });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: "Error updating password" });
-      }
-    };
 }
 
 module.exports = new requestHandler();
