@@ -38,9 +38,19 @@ class requestHandler {
       if (!user.admin) {
         const archives = await Archive.findAll({
           where: {
-            userId: user.id
+            [Op.or]: [
+              { userId: user.id },
+              {
+                areaName: user.area,
+                userId: null
+              },
+              { 
+                areaName: null,
+                userId: null
+              }
+            ]
           },
-          attributes: ['filePath','name','userId','id']
+          attributes: ['filePath','name','userId','id','areaName']
         });
         res.status(200).send(archives);
       }
@@ -52,7 +62,7 @@ class requestHandler {
       const archives = await Archive.findAll(
       {
         where: { areaName : user.area },
-        attributes: ['filePath','name','areaName','userId','id'] // Select only the filePath and name attributes
+        attributes: ['filePath','name','areaName','userId','id']
       });
       res.status(200).send(archives);
       }
@@ -70,22 +80,25 @@ class requestHandler {
       }
       
       let { body, params, user } = req;
+      let {area} = body;
+      let foundUser; 
 
-      const foundUser = await await User.findOne({ where: { id:body.userId }, attributes: ['area'] });
-      console.log(foundUser);
-      if (!foundUser) {
-        return res.status(404).send({ message: "User not found" });
+      if (body.userId) {
+       foundUser = await User.findOne({ where: { id:body.userId }, attributes: ['area'] });
       }
-      const areaName = foundUser.area ? foundUser.area : null;
 
+      if (!foundUser && !area && body.userId) {
+       return res.status(404).send({ message: "User not found" });
+      }
+
+      const areaName = foundUser?.area ? foundUser.area : null;
       let archive = {
         name: file.originalname,
         filePath : file.filename,
-        areaName : areaName,
-        userId : body.userId,
+        areaName : areaName? areaName : area? area : null,
+        userId : body.userId? body.userId : null,
         uploaderId : user.id
       }
-
       Archive.create(archive).then(() => {
           res.status(201).send({ message: "File uploaded successfully", file: archive });
         })
@@ -95,6 +108,7 @@ class requestHandler {
       });
     } catch (error) {
       res.status(500).send({ message: "Error uploading file", error });
+      console.log(error);
     }
   };
   //DELETE
