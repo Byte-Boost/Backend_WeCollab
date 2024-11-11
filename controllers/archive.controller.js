@@ -38,9 +38,19 @@ class requestHandler {
       if (!user.admin) {
         const archives = await Archive.findAll({
           where: {
-            userId: user.id
+            [Op.or]: [
+              { userId: user.id },
+              {
+                areaName: user.area,
+                userId: null
+              },
+              { 
+                areaName: null,
+                userId: null
+              }
+            ]
           },
-          attributes: ['filePath','name','userId','id']
+          attributes: ['filePath','name','userId','id','areaName']
         });
         res.status(200).send(archives);
       }
@@ -52,7 +62,7 @@ class requestHandler {
       const archives = await Archive.findAll(
       {
         where: { areaName : user.area },
-        attributes: ['filePath','name','areaName','userId','id'] // Select only the filePath and name attributes
+        attributes: ['filePath','name','areaName','userId','id']
       });
       res.status(200).send(archives);
       }
@@ -68,17 +78,27 @@ class requestHandler {
       if (!file) {
         return res.status(400).send({ message: "No file uploaded" });
       }
-
+      
       let { body, params, user } = req;
-      console.log(user.id)
+      let {area} = body;
+      let foundUser; 
+
+      if (body.userId) {
+       foundUser = await User.findOne({ where: { id:body.userId }, attributes: ['area'] });
+      }
+
+      if (!foundUser && !area && body.userId) {
+       return res.status(404).send({ message: "User not found" });
+      }
+
+      const areaName = foundUser?.area ? foundUser.area : null;
       let archive = {
         name: file.originalname,
         filePath : file.filename,
-        areaName : null,
-        userId : body.userId,
+        areaName : areaName? areaName : area? area : null,
+        userId : body.userId? body.userId : null,
         uploaderId : user.id
       }
-
       Archive.create(archive).then(() => {
           res.status(201).send({ message: "File uploaded successfully", file: archive });
         })
@@ -88,7 +108,26 @@ class requestHandler {
       });
     } catch (error) {
       res.status(500).send({ message: "Error uploading file", error });
+      console.log(error);
     }
   };
+  //DELETE
+  deleteArchive = async (req, res) => {
+    try {
+      const { filename } = req.params;
+      const archive = await Archive.findOne({ where: { filePath : filename } });
+      if (!archive) {
+        return res.status(404).send({ message: "Archive not found" });
+      }
+      const filePath = path.join(__dirname, '../uploads', archive.filePath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+      await Archive.destroy({ where: { filePath : filename } });
+      res.status(200).send({ message: "Archive deleted successfully" });
+    } catch (error) {
+      res.status(500).send({ message: "Error deleting archive", error });
+    }
+  }
 }
 module.exports = new requestHandler();

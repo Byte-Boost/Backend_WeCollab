@@ -43,9 +43,10 @@ app.use('/tickets', require('./routes/ticket.routes'));
 app.use('/areas', require('./routes/area.routes'));
 app.use('/roles', require('./routes/role.routes'));
 app.use('/archives', require('./routes/archive.routes'));
+app.use('/data', require('./routes/data.routes'));
 
 db.sequelize.sync().then(async ()=>{
-  await startup.setupAreas()
+  await startup.setupAreas();
   // Create an admin user if it doesn't exist
   if (process.env.DEVELOPMENT_TESTS) dummyData.generateDummyData();
   else startup.generateAdmin();

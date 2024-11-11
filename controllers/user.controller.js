@@ -31,15 +31,15 @@ class requestHandler {
         name: startsWith ? {[Op.regexp]: `^${startsWith}`} : {[Op.ne]: null},
         admin: (adminOnly && adminOnly.toUpperCase() == "TRUE")? true : {[Op.ne]: null},
       },
-      include: [{ model: Role, attributes: ["name"] }],
-      attributes: isAdmin ? { exclude: ["password"] } : ["id", "name"],
       order: sortBy(sortMethod),
       offset: (page - 1) * limit,
-      limit: limit
+      limit: limit,
+      include: [{ model: Role, attributes: ["name"] }],
+      attributes: isAdmin ? { exclude: ["password"] } : ["id", "name"],
     };
 
     // Query & response
-    User.findAll(findOpt)
+    User.findAndCountAll(findOpt)
       .then((users) => {
         res.status(200).send(users);
       })
@@ -161,6 +161,45 @@ class requestHandler {
     }
 
   }
+
+  resetPassword = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const defaultPassword = "123456"; 
+      const hashedPassword = await service.getHashed(defaultPassword);
+      
+      await User.update({ password: hashedPassword }, { where: { id } });
+      res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Error resetting password" });
+    }
+  };
+
+  updatePassword = async (req, res) => {
+    const { user, body } = req;
+    User.findByPk(user.id).then(async (fullUser)=>{
+      const passwordMatch = await service.compareHash(body.currentPassword, fullUser.password);
+      
+      if (!passwordMatch) {
+        return res.status(401).send({ error: "Current password incorrect" });
+      }
+  
+      const hashedNewPassword = await service.getHashed(body.newPassword);
+      
+      User.update({ password: hashedNewPassword }, { where: { id: user.id } })
+        .then(()=>{
+            res.status(200).send();
+        }).catch ((error)=>{
+          console.error(error);
+          res.status(500).send({ error: "Error updating password" });
+        }) 
+
+    }).catch((error)=>{
+        console.error(error);
+        res.status(500).send({ error: "Error finding user" });
+    })
+  };
   // DELETE
   deleteUser = (req, res) => {
     let { params } = req;
