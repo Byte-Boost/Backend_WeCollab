@@ -69,17 +69,7 @@ class requestHandler {
             res.status(400).send();
           });
   }
-  getSelf = (req, res) => {
-    let { user } = req;
-    User.findByPk(user.id, {include: [{ model: Role, attributes: ["name"] }], attributes: { exclude: ["password"]}})
-      .then((user) => {
-        res.status(200).send(user);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).send();
-      });
-  }
+
 
 // ACCOUNT ROUTE
   // POST
@@ -210,28 +200,6 @@ class requestHandler {
         res.status(500).send({ error: "Error finding user" });
     })
   };
-
-  updatePfp = async (req, res) =>{
-    let { body, user } = req;
-
-    if (body.pfp !== null){
-      User.update({
-        pfp: body.pfp,
-        }, {
-        where: {
-          id: user.id
-        },
-      }).then(()=>{
-        res.status(200).send()
-      }).catch((err) => {
-        console.log(err);
-        res.status(400).send({error: "Invalid request"});
-      });
-    } else {
-      res.status(400).send({error: "Invalid request"});
-    }
-  }
-  
   // DELETE
   deleteUser = (req, res) => {
     let { params } = req;
