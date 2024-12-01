@@ -3,8 +3,10 @@ const adminMiddleware = require('../middleware/admin.middleware.js');
 const router = require('express').Router();
 
 router.get('/', controller.getUsers);
+router.get('/self', controller.getSelf);
 router.get('/cpf/:cpf', adminMiddleware, controller.getUsersByCPF);
 router.get('/:id', adminMiddleware, controller.getUsersById);
+router.put('/update-pfp', controller.updatePfp);
 router.patch('/:id/reset-password', adminMiddleware, controller.resetPassword);
 router.patch('/update-password', controller.updatePassword);
 module.exports = router;

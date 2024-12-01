@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       primaryKey: true,
     },
+    pfp: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
